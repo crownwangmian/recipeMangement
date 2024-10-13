@@ -28,7 +28,7 @@ public class AppTest {
         foodList.add(food);
         foodList.add(food2);
 
-        Hutool.saveRecipeToFile("chinese.json", foodList);
+        Hutool.saveRecipeToFile("src/main/json/chinese.json", foodList);
 
 
     }
@@ -38,7 +38,7 @@ public class AppTest {
     public void testDownload() {
 
         // 使用类加载器来获取资源文件路径
-        String filePath = getClass().getClassLoader().getResource("chinese.json").getPath();
+        String filePath = getClass().getClassLoader().getResource("src/main/json/chinese.json").getPath();
 
 
         List<ChineseFood> chineseFoods = Hutool.loadMenuFromFile(filePath, ChineseFood.class);

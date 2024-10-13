@@ -4,28 +4,27 @@ import com.iths.pojo.Food;
 
 import java.util.List;
 
-public class RecipeController<T extends Food> {
-    private List<T> menu;  // 成员变量，存储 T 类型的 Food 子类
+public class RecipeController {
 
-    // 构造函数，接收 List<T> 作为初始菜单
-    public RecipeController(List<T> menu) {
-        this.menu = menu;
-    }
 
-    // 添加菜品
-    public void addFood(T food) {
+    // 添加菜品（方法级别的泛型处理）
+    public static <T extends Food> void addFood(List<T> menu, T food) {
         menu.add(food);
         System.out.println("Added: " + food.getTitle());
     }
 
-    // 删除菜品，根据标题删除
-    public void removeFood(String title) {
-        menu.removeIf(food -> food.getTitle().equalsIgnoreCase(title));
-        System.out.println("Removed: " + title);
+    // 删除菜品（根据标题删除）
+    public static <T extends Food> void removeFood(List<T> menu, String title) {
+        boolean removed = menu.removeIf(food -> food.getTitle().equalsIgnoreCase(title));
+        if (removed) {
+            System.out.println("Removed: " + title);
+        } else {
+            System.out.println("Food not found: " + title);
+        }
     }
 
-    // 更新菜品
-    public void updateFood(String title, T updatedFood) {
+    // 更新菜品（根据标题更新）
+    public static <T extends Food> void updateFood(List<T> menu, String title, T updatedFood) {
         for (int i = 0; i < menu.size(); i++) {
             if (menu.get(i).getTitle().equalsIgnoreCase(title)) {
                 menu.set(i, updatedFood);
@@ -36,8 +35,8 @@ public class RecipeController<T extends Food> {
         System.out.println("Food not found: " + title);
     }
 
-    // 显示菜单
-    public void displayMenu() {
+    // 显示菜单（显示菜单中的所有菜品）
+    public static <T extends Food> void displayMenu(List<T> menu) {
         if (menu.isEmpty()) {
             System.out.println("Menu is empty.");
             return;
@@ -50,8 +49,8 @@ public class RecipeController<T extends Food> {
         }
     }
 
-    // 获取当前菜单
-    public List<T> getMenu() {
+    // 获取当前菜单（直接返回列表）
+    public static <T extends Food> List<T> getMenu(List<T> menu) {
         return menu;
     }
 
