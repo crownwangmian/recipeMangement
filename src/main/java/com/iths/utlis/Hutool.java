@@ -1,6 +1,7 @@
 package com.iths.utlis;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
@@ -25,24 +26,31 @@ public class Hutool {
                 file.getParentFile().mkdirs();  // 创建父目录
             }
 
+            if (!file.exists()) {
+                System.out.println("File does not exist. Creating the file...");
+                file.createNewFile();  // Create the file if it does not exist
+            }
+
             // 将对象列表转换为 JSON 字符串
             String jsonStr = JSONUtil.toJsonStr(menu);
-
             // 将 JSON 字符串写入到文件中
             FileUtil.writeString(jsonStr, filePath, StandardCharsets.UTF_8);
-
             System.out.println("Data saved to " + filePath);
         } catch (Exception e) {
             System.out.println("Error saving data to file: " + e.getMessage());
         }
-
-
     }
 
 
     public static <T extends Food> List<T> loadMenuFromFile(String filePath, Class<T> clazz) {
-        // 读取 JSON 文件内容为字符串，指定字符集为 UTF-8
-        String jsonContent = FileUtil.readString(new File(filePath), StandardCharsets.UTF_8);
+        String jsonContent = null;
+        try {
+            // 读取 JSON 文件内容为字符串，指定字符集为 UTF-8
+            jsonContent = FileUtil.readString(new File(filePath), StandardCharsets.UTF_8);
+        } catch (IORuntimeException e) {
+            System.out.println("The file does not exist or the path is incorrect.");
+            return List.of();  // Returning an empty list to prevent further processing
+        }
 
         // 检查文件是否为空或内容为空字符串
         if (jsonContent == null || jsonContent.trim().isEmpty()) {
